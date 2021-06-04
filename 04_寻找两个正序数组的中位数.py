@@ -1,3 +1,26 @@
+# 合并数组（两个有序数组合并，是归并排序里的一个步骤），然后返回最中间的数（合并后数组有奇数个数字）或返回最中间两个数的均值（合并后数组中有偶数个数字），复杂度在O（m+n)
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        point1 = point2 = 0 # 初始化两个指针为0
+        nums_list = [] # 定义一个空列表，用来存放合并后的数组
+        while point1 < len(nums1) and point2 < len(nums2): # 当指针合法时
+            if nums1[point1] < nums2[point2]: # 比较指针位置的数值大小，把小的那个的值并入nums_list，并把这个指针往后挪一位（总有一个指针先行到达边界，然后就会跳出循环）
+                nums_list.append(nums1[point1])
+                point1 += 1
+            else:
+                nums_list.append(nums2[point2])
+                point2 += 1
+        # 不管是nums1还是nums2，一次while循环之后，指针只有：指向空值和指向未添加到nums_list中的值（未使用过的值）两种情况
+        # 列表的切片操作容错很好，无论索引是否指空，都不会报错，而是会返回未加入到nums_list中的所有值，或者一个空列表[]
+        nums_list += nums1[point1:]
+        nums_list += nums2[point2:]
+        # 拿到合并数组之后，判断一下奇数个还是偶数个，返回中位数
+        if len(nums_list)%2:
+            return nums_list[len(nums_list)//2]
+        else:
+            return (nums_list[len(nums_list)//2-1]+nums_list[len(nums_list)//2])/2
+
+
 # 抛开合并数组重新sort然后直接找中位数的方法不谈，这是第一个版本，复杂度为O(m+n）
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
